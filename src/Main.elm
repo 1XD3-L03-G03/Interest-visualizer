@@ -12,7 +12,9 @@ myShapes model =
   [ 
     titleText
     , questionText model |> move (0,30)
-    , questionInput |> move (0,30)
+    , questionInput |> move (-20,30)
+    , equationText |> move (-17,0)
+    , resultText model
   ]
 
 titleText = text "1MM3 - Interest Calulator" |> centered |> filled black |> move (0,40) 
@@ -29,11 +31,21 @@ questionText model = group [
 questionInput = group [
     html 62 22 (input [type_ "number", onInput UpdateP, value "1000", style "width" "56px", style "height" "16px", style "padding" "0"] []) |> scale 0.25 |> move (-15,-20)
     , html 62 22 (input [type_ "number", onInput UpdateI, value "3", style "width" "56px", style "height" "16px", style "padding" "0"] []) |> scale 0.25 |> move (-15,-25)
-    , html 62 22 (input [type_ "number", onInput UpdateT, value "5", style "width" "56px", style "height" "16px", style "padding" "0"] []) |> scale 0.25 |> move (-15,-30)
+    , html 62 22 (input [type_ "number", onInput UpdateT, value "10", style "width" "56px", style "height" "16px", style "padding" "0"] []) |> scale 0.25 |> move (-15,-30)
     , text "P" |> filled blue  |> scale 0.5 |> move (-19,-25)
     , text "I" |> filled blue  |> scale 0.5 |> move (-19,-30)
     , text "T" |> filled blue  |> scale 0.5 |> move (-20,-35)
+    , text "(principal)" |> filled black |> scale 0.25 |> move (1,-24)
+    , text "(rate)" |> filled black |> scale 0.25 |> move (1,-29)
+    , text "(time)" |> filled black |> scale 0.25 |> move (1,-34)
   ]
+
+equationText = group [
+    text "B(t) = Pe" |> customFont "Georgia,'Times New Roman',Times,serif" |> italic |> filled black  |> scale 0.5 |> move (-54,0)
+    , text "rt" |> customFont "Georgia,'Times New Roman',Times,serif" |> italic |> filled black |> scale 0.25 |> move (-30,3)
+  ]
+
+resultText model = text ("result after " ++ (fromFloat model.valT) ++ " years: " ++ (fromFloat model.result)) |> filled black  |> scale 0.5 |> move (-70,-30) 
 
 removeMaybe a = 
   case a of
@@ -50,6 +62,7 @@ type alias Model = {
   , valP : Float
   , valI : Float
   , valT : Float
+  , result : Float
   }
 
 update msg model = case msg of
@@ -64,6 +77,7 @@ init = {
   , valP = 1000.0
   , valI = 3.0
   , valT = 10.0
+  , result = 0.0
   }
 
 main = gameApp Tick { model = init, view = view, update = update, title = "Game Slot" }
