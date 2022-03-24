@@ -24,8 +24,8 @@ myShapes model =
     , resultText model |> move ( -10, -5 )
     , bigGraph model |> move ( 5, -24 )
     , controls|> move ( 15, 0)
-    , GraphicSVG.text "Money X 1000" |> size 6 |> filled black |> rotate (degrees 90) |> move ( 0, -39 )
-    , GraphicSVG.text "Time" |> size 6 |> filled black |> move ( 40, -59 )
+    , GraphicSVG.text "Thousands ($)" |> size 6 |> filled black |> rotate (degrees 90) |> move ( 0, -39 )
+    , GraphicSVG.text "Time (years)" |> size 6 |> filled black |> move ( 40, -59 )
     
     ]
 
@@ -114,13 +114,13 @@ controls =
 
 mkCurve model =
     openPolygon
-        (List.range 0 200
+        (List.range 0 (round (model.valT*10))
             |> List.map
                 (\idx ->
                     let
-                        x = 0.1 * toFloat idx
+                        x = 0.05 * toFloat idx
 
-                        y = (model.valP * (e ^ ((model.valR / 100) * x))) / 1000
+                        y = (model.valP * (e ^ ((model.valR / 100) * x*2))) / 1000
                     in
                     ( 4 * x, 1 * y )
                 )
@@ -162,12 +162,12 @@ bigGraph model = group
       |> List.map ( \ idx -> 
                     let
                       y = 10*toFloat  idx
-                    in [ GraphicSVG.text (String.fromInt idx)
+                    in [ GraphicSVG.text (String.fromInt (idx*10))
                               |> bold
                               |> filled black
                               |> (if (model.axes) then (makeTransparent 1) else (makeTransparent 0))
-                              |> scale 0.5
-                              |> move (2, y)
+                              |> scale 0.25
+                              |> move (1, y)
 
                            , line (5, y) (96,y)
                               |> outlined (solid 0.5) black
