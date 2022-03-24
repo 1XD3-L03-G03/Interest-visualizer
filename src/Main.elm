@@ -10,7 +10,14 @@ import String exposing (fromFloat, fromInt)
 
 
 myShapes model =
-    [ titleText
+    [ 
+    background
+    , decorator_circle |> move (-90 , 62)
+    , border |> move (-90 , 62)
+    , decorator_circle |> move (110 , 80) 
+    , decorator_circle |> move (115 , -85)
+    , border_2 |> move (115 , -85)
+    , titleText
     , questionText model |> move ( 0, 12 )
     , questionInput |> move ( -32, -10 )
     , equationText |> move ( -26, -40 )
@@ -19,8 +26,34 @@ myShapes model =
     , controls|> move ( 15, 0)
     , GraphicSVG.text "Money X 1000" |> size 6 |> filled black |> rotate (degrees 90) |> move ( 0, -39 )
     , GraphicSVG.text "Time" |> size 6 |> filled black |> move ( 40, -59 )
+    
     ]
 
+background = group [
+        rect 192 128
+        |> filled (rgb 247 219 167)
+    ]
+
+
+decorator_circle = group [
+        circle 35 
+        |> filled (rgb 197 123 87)
+        |> makeTransparent 0.8
+    ]
+
+
+
+border = group [
+        circle 45
+        |> outlined (solid 6) (rgb 197 123 87)
+        |> makeTransparent 0.8
+    ]
+
+border_2 = group [
+        circle 45
+        |> outlined (solid 10) (rgb 197 123 87)
+        |> makeTransparent 0.8
+    ]
 
 titleText =
     GraphicSVG.text "Interest Calulator" |> centered |> filled black |> move ( 0, 40 )
@@ -110,12 +143,14 @@ bigGraph model = group
                       x =  2* toFloat idx
                     in [ GraphicSVG.text (String.fromInt idx)
                               |> centered
-                              |>bold
-                              |> (if (model.axes) then (filled black) else (filled white))
+                              |> bold
+                              |> filled black
+                              |> (if (model.axes) then (makeTransparent 1) else (makeTransparent 0))
                               |> scale 0.5
                               |> move (x , -6)
                            , line (x, 40) (x,0)
-                              |> (if (model.grid) then (outlined (solid 0.5) black) else (outlined (solid 0.5) white))
+                              |> outlined (solid 0.5) black
+                              |> (if (model.grid) then (makeTransparent 1)else (makeTransparent 0))
                               |> scale 1
 
                        ]
@@ -129,12 +164,14 @@ bigGraph model = group
                       y = 10*toFloat  idx
                     in [ GraphicSVG.text (String.fromInt idx)
                               |> bold
-                              |> (if (model.axes) then (filled black) else (filled white))
+                              |> filled black
+                              |> (if (model.axes) then (makeTransparent 1) else (makeTransparent 0))
                               |> scale 0.5
                               |> move (2, y)
 
                            , line (5, y) (96,y)
-                              |> (if (model.grid) then (outlined (solid 0.5) black) else (outlined (solid 0.5) white))
+                              |> outlined (solid 0.5) black
+                              |> (if (model.grid) then (makeTransparent 1)else (makeTransparent 0))
                        ]
                   )
       |> List.concat 
